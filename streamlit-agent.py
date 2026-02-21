@@ -64,11 +64,11 @@ async def validate_order(state: State) -> Dict[str, Any]:
     await asyncio.sleep(0.5)
     print(f"[validate_order] order {uid} is valid")
 
-    await send_to_hive(
-        destination_agent_id="billing_agent",
-        destination_agent_endpoint=EndpointEnum.DATA,
-        payload={"event": "order_validated", "order_id": uid},
-    )
+   # await send_to_hive(
+    #    destination_agent_id="billing_agent",
+     #   destination_agent_endpoint=EndpointEnum.DATA,
+      #  payload={"event": "order_validated", "order_id": uid},
+    #)
 
     return {"messages": [f"order {uid} validated"]}
 
@@ -78,15 +78,15 @@ async def await_payment(state: State) -> Dict[str, Any]:
     payment = hive_data.get("payment", PaymentConfirmation)
     print(f"[await_payment] received {payment.amount} {payment.currency}")
 
-    await send_to_hive(
-        destination_agent_id="receipt_agent",
-        destination_agent_endpoint=EndpointEnum.DATA,
-        payload={
-            "event": "payment_received",
-            "amount": payment.amount,
-            "currency": payment.currency,
-        },
-    )
+    #await send_to_hive(
+     #   destination_agent_id="receipt_agent",
+      #  destination_agent_endpoint=EndpointEnum.DATA,
+       # payload={
+        #    "event": "payment_received",
+         #   "amount": payment.amount,
+          #  "currency": payment.currency,
+       # },
+    #)
 
     return {"messages": [f"paid {payment.amount} {payment.currency}"]}
 
@@ -98,16 +98,16 @@ async def await_fulfillment(state: State) -> Dict[str, Any]:
     print(f"[await_fulfillment] label: {label.carrier} {label.tracking_number}")
     print(f"[await_fulfillment] warehouse: {ack.warehouse_id}")
 
-    await send_to_hive(
-        destination_agent_id="tracking_agent",
-        destination_agent_endpoint=EndpointEnum.START,
-        payload={
-            "event": "shipment_ready",
-            "carrier": label.carrier,
-            "tracking_number": label.tracking_number,
-            "warehouse": ack.warehouse_id,
-        },
-    )
+   #await send_to_hive(
+    #    destination_agent_id="tracking_agent",
+     #   destination_agent_endpoint=EndpointEnum.START,
+      #  payload={
+       #     "event": "shipment_ready",
+        #    "carrier": label.carrier,
+         #   "tracking_number": label.tracking_number,
+          #  "warehouse": ack.warehouse_id,
+        #},
+    #) 
 
     return {
         "messages": [f"shipped via {label.carrier}", f"packed at {ack.warehouse_id}"]
@@ -118,11 +118,11 @@ async def complete_order(state: State) -> Dict[str, Any]:
     uid = state.get("unique_id", "unknown")
     print(f"[complete_order] order {uid} complete — {state['messages']}")
 
-    await send_to_hive(
-        destination_agent_id="notification_agent",
-        destination_agent_endpoint=EndpointEnum.DATA,
-        payload={"event": "order_complete", "order_id": uid},
-    )
+    #await send_to_hive(
+     #   destination_agent_id="notification_agent",
+      #  destination_agent_endpoint=EndpointEnum.DATA,
+       # payload={"event": "order_complete", "order_id": uid},
+    #)
 
     return {"messages": ["done"]}
 
